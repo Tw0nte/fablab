@@ -194,7 +194,7 @@ file.close()
 ftp.quit()
 ```
 
-### **Utilisation du serveur Web**
+### **Démarrage du serveur Web**
 ```python
 python server_detector.py
 ```
