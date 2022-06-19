@@ -14,8 +14,7 @@ Une fois que le NodeMCU est visible et connecté au PC, nous avons suivi la proc
 
 Une fois flashé, nous avons utilisé le logiciel Arduino IDE pour envoyer notre code sur l’ESP8266. Il a ensuite fallu intégrer manuellement l’ESP8266 au logiciel car il n’est inclus par défaut. Pour télécharger ARDUINO IDE: [https://www.arduino.cc/en/software](https://www.arduino.cc/en/software)
 
-Pour intégrer l’ESP8266 à Arduino IDE: [https://randomnerdtutorials.com/how-to-install-esp8266-board-arduino-ide/](https://randomnerdtutorials.com/how-to-install-esp8266-board-arduino-ide/). \
-**Randomnerdtutorials** est un site très pratique car il recense différents projets avec des ESP.
+Pour intégrer l’ESP8266 à Arduino IDE: [https://randomnerdtutorials.com/how-to-install-esp8266-board-arduino-ide/](https://randomnerdtutorials.com/how-to-install-esp8266-board-arduino-ide/). **Randomnerdtutorials** est un site très pratique car il recense différents projets avec des ESP.
 
 Nous avons ensuite travaillé sur les codes pour connecter l’ESP8266 au Wi-Fi, récupérer les informations des capteurs et compiler les données dans un fichier qui est ensuite envoyé en .csv sur un serveur HTTP. A savoir qu’il est nécessaire que l’ESP récupère la date et l’heure via NTP pour faire l’envoi en HTTP.
 
@@ -29,8 +28,6 @@ Code pour synchro NTP:
 
 Envoi du fichier .csv en HTTP: 
 
-La demande initiale était d’envoyer le fichier en SFTP. Après quelques recherches, nous avons découvert que SFTP n’est pas implémenté avec l’ESP8266.
-
-Nous nous sommes ensuite intéressés au HTTPS. Après plusieurs essais, nous avons conclu que l’ESP8266 n’est pas assez puissant pour envoyer des données avec autre chose que du HTTPS en SHA-1. Cette méthode n’étant pas sécurisée, nous avons choisi d’envoyer le fichier en HTTP pour plus de simplicité.
+La demande initiale était d’envoyer le fichier en SFTP. Après quelques recherches, nous avons découvert que SFTP n’est pas implémenté avec l’ESP8266. Nous nous sommes ensuite intéressés au HTTPS. Après plusieurs essais, nous avons conclu que l’ESP8266 n’était pas assez puissant pour envoyer des données avec autre chose que du HTTPS en SHA-1. Cette méthode n’étant pas sécurisée, nous avons choisi d’envoyer le fichier en HTTP pour plus de simplicité.
 
 Code HTTP:
