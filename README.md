@@ -24,7 +24,7 @@ Pour la partie code nous avons tout d'abord travaillé sur celui de l'ESP afin d
 
 En seconde partie nous avons travaillé sur la création du serveur Web python en HTTP, puis sur le traitement des données reçues avec nottament la création du fichier CSV et enfin sur l'envoi vers le serveur SFTP.
 
-## **Code ESP8266**
+## **Code de l'ESP8266**
 Code Wi-Fi:
 ```cpp
 // Initialize Serial Monitor
@@ -148,9 +148,9 @@ if (((timeClient.getHours() >= 8) || (timeClient.getHours() < 19)) && ((timeClie
 delay(1000);
 }
 ```
-## **Code serveur Web**
+## **Code du serveur Web**
 
-Serveur Web :
+Serveur HTTP :
 ```python
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
