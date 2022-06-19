@@ -18,6 +18,8 @@ Pour intégrer l’ESP8266 à Arduino IDE: [https://randomnerdtutorials.com/how-
 
 Nous avons ensuite travaillé sur les codes pour connecter l’ESP8266 au Wi-Fi, récupérer les informations des capteurs et compiler les données dans un fichier qui est ensuite envoyé en .csv sur un serveur HTTP. A savoir qu’il est nécessaire que l’ESP récupère la date et l’heure via NTP pour faire l’envoi en HTTP.
 
+![This is an image](schema.png)
+
 Code Wi-Fi:
 
 Code capteurs:
