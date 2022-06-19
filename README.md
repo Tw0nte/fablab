@@ -18,19 +18,139 @@ Pour intégrer l’ESP8266 à Arduino IDE: [https://randomnerdtutorials.com/how-
 
 Nous avons ensuite travaillé sur les codes pour connecter l’ESP8266 au Wi-Fi, récupérer les informations des capteurs et compiler les données dans un fichier qui est ensuite envoyé en .csv sur un serveur HTTP. A savoir qu’il est nécessaire que l’ESP récupère la date et l’heure via NTP pour faire l’envoi en HTTP.
 
+La demande initiale était d’envoyer le fichier en SFTP. Après quelques recherches, nous avons découvert que SFTP n’est pas implémenté sur les ESP8266. Nous nous sommes donc intéressés au HTTPS. Après plusieurs essais, nous avons remarqué que l’ESP8266 n’était pas assez puissant pour envoyer des données avec autre chose que du HTTPS en SHA-1. Cette méthode n’étant pas sécurisée, nous avons choisi d’envoyer les données en HTTP vers un serveur Web Python qui se chargera de créer le fichier CSV afin de l'envoyer vers le serveur SFTP.
+
 Voici le schéma de fonctionnement :
 ![This is an image](schema.png)
 
+## **Code ESP8266**
 Code Wi-Fi:
+```cpp
+// Initialize Serial Monitor
+Serial.begin(115200);
 
-Code capteurs:
+// Connect to Wi-Fi
+WiFi.begin("SSID", "PASSWORD");
+while (WiFi.status() != WL_CONNECTED) {
+  delay(500);
+  Serial.print(".");
+}
 
-Code création et update fichier de données:
+Serial.println();
+Serial.print("Connected, IP address: ");
+Serial.println(WiFi.localIP());
+```
 
 Code pour synchro NTP:
+```cpp
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "0.fr.pool.ntp.org");
+
+// Update time with NTP
+timeClient.begin();
+timeClient.setTimeOffset(7200);
+timeClient.update();
+```
+
+Code capteurs:
+```cpp
+int sensorValueEntrer= digitalRead(Entrer);
+int sensorValueSortie = digitalRead(Sortie);
+int firstDetectedTime;
+
+// If someone is in front both sensor at the same time it restarts the loop
+if(sensorValueEntrer == 0 and sensorValueSortie == 0){
+  delay(500);
+  loop();
+}
+else {
+
+// If first sensor is triggered first, it means that someone can enter
+if(sensorValueEntrer == 0){
+  firstDetectedTime = millis();
+
+  // It tries to detect during 1 second if the second sensor is triggered
+  do {
+    sensorValueSortie = digitalRead(Sortie);
+    if(sensorValueSortie == 0){
+      Serial.println("Entrée");
+      break;
+    }
+  } while (firstDetectedTime + 1000 > millis());
+
+  delay(500);
+  loop();
+}
+
+// If second sensor is triggered first, it means that someone can go out
+if(sensorValueSortie == 0){
+  firstDetectedTime = millis();
+
+  // It tries to detect during 1 second if the first sensor is triggered
+  do {
+    sensorValueEntrer= digitalRead(Entrer);
+    if(sensorValueEntrer == 0){
+      Serial.println("Sortie");
+      break;
+    }
+  } while (firstDetectedTime + 1000 > millis());
+  delay(500);
+  loop();
+}
+delay(100);
+```
+
+Code pour le HTTP POST vers le serveur Web python :
+```cpp
+time_t epochTime = timeClient.getEpochTime();
+struct tm *ptm = gmtime ((time_t *)&epochTime); 
+
+String formattedTime = timeClient.getFormattedTime();
+String currentDate = String(ptm->tm_year+1900) + "-" + String(ptm->tm_mon+1) + "-" + String(ptm->tm_mday);
+String weekDay = weekDays[timeClient.getDay()];
+  
+// Enter the if statement only if the hours are between 8h and 19h and every 30 minutes
+if (((timeClient.getHours() >= 8) || (timeClient.getHours() < 19)) && ((timeClient.getMinutes() == 30) || (timeClient.getMinutes() == 0)) && timeClient.getSeconds() == 00){
+  String csv_entry = currentDate + ',' + formattedTime + ',' + 0 + ',' + 0 + ',' + "ALLI1,Counter A,RDCentre,Alliance,ALLI";
+
+  // Check if we are connected to the wifi
+  if(WiFi.status()== WL_CONNECTED){
+    WiFiClient client;
+    HTTPClient http;
+
+    // The IP address and the port of the web server to connect
+    http.begin(client, "http://192.168.43.133:8080/");
+
+    // Specify the content-type header
+    http.addHeader("Content-Type", "text/plain");
+
+    // Send an HTTP POST request with the csv string
+    int httpResponseCode = http.POST(csv_entry);
+
+    // Check if the request have been send successfully
+    if (httpResponseCode != 200)
+    {
+      Serial.println("Can't send POST request to the web server");
+    }
+
+    else {
+      Serial.println("POST request send to the web server");
+    }
+
+    // Free resources
+    http.end();
+  } 
+
+  else {
+    Serial.println("WiFi Disconnected");
+  }
+delay(1000);
+}
+```
+## **Code serveur Web Python**
 
 Envoi du fichier .csv en HTTP: 
 
-La demande initiale était d’envoyer le fichier en SFTP. Après quelques recherches, nous avons découvert que SFTP n’est pas implémenté avec l’ESP8266. Nous nous sommes ensuite intéressés au HTTPS. Après plusieurs essais, nous avons conclu que l’ESP8266 n’était pas assez puissant pour envoyer des données avec autre chose que du HTTPS en SHA-1. Cette méthode n’étant pas sécurisée, nous avons choisi d’envoyer le fichier en HTTP pour plus de simplicité.
+
 
 Code HTTP:
