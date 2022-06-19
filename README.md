@@ -1,11 +1,4 @@
-# **<span style="text-decoration:underline;">Réalisation</span>**
-
-
-# **<span style="text-decoration:underline;">d'un compteur pour mesurer la</span>**
-
-
-# **<span style="text-decoration:underline;">fréquentation en bibliothèque</span>**
-
+# **<span style="text-decoration:underline;">Réalisation d'un compteur pour mesurer la fréquentation en bibliothèque</span>**
 
 # **Le projet**
 
@@ -18,9 +11,7 @@ Les données sont envoyé sur un poste sur lequel un script python est chargé d
 
 # **Procédure**
 
-Nous avons choisi d’utiliser Arduino pour coder sur l’ESP8266. 
-
-Pour commencer à utiliser l’ESP8266, il faut flasher le contrôleur. Avant de le flasher il faut installer les drivers nécessaires sur son PC. 
+Nous avons choisi d’utiliser Arduino pour coder sur l’ESP8266. Pour commencer à utiliser l’ESP8266, il faut flasher le contrôleur. Avant de le flasher il faut installer les drivers nécessaires sur son PC. 
 
 [https://cityos-air.readme.io/docs/1-usb-drivers-for-nodemcu-v10](https://cityos-air.readme.io/docs/1-usb-drivers-for-nodemcu-v10)
 
