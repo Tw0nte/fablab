@@ -18,7 +18,7 @@ Pour intégrer l’ESP8266 à Arduino IDE: [https://randomnerdtutorials.com/how-
 
 Nous avons ensuite travaillé sur les codes pour connecter l’ESP8266 au Wi-Fi, récupérer les informations des capteurs et compiler les données dans un fichier qui est ensuite envoyé en .csv sur un serveur HTTP. A savoir qu’il est nécessaire que l’ESP récupère la date et l’heure via NTP pour faire l’envoi en HTTP.
 
-La demande initiale était d’envoyer le fichier en SFTP. Après quelques recherches, nous avons découvert que SFTP n’est pas implémenté sur les ESP8266. Nous nous sommes donc intéressés au HTTPS. Après plusieurs essais, nous avons remarqué que l’ESP8266 n’était pas assez puissant pour envoyer des données avec autre chose que du HTTPS en SHA-1. Cette méthode n’étant pas sécurisée, nous avons choisi d’envoyer les données en HTTP vers un serveur Web Python qui se chargera de créer le fichier CSV afin de l'envoyer vers le serveur SFTP.
+La demande initiale était d’envoyer le fichier en SFTP. Après quelques recherches, nous avons découvert que SFTP n’était pas implémenté sur les ESP8266. Nous nous sommes donc dirigé vers une autre approche qui consistait à gérer HTTPS. Après plusieurs essais, nous avons remarqué que l’ESP8266 n’était pas assez puissant pour envoyer des données avec autre chose que du HTTPS en SHA-1. Cette méthode n’étant pas sécurisée, nous avons choisi d’envoyer les données en HTTP vers un serveur Web Python qui se chargera de créer le fichier CSV afin de l'envoyer vers le serveur SFTP.
 
 Voici le schéma de fonctionnement :
 ![This is an image](schema.png)
@@ -166,8 +166,11 @@ with HTTPServer(('192.168.43.133', 8080), handler) as server:
   server.serve_forever()
 ```
 
-Envoi du fichier CSV vers le serveur SFTP : 
+Création du fichier CSV et envoi vers le serveur SFTP : 
 ```python
+from ftplib import FTP_TLS, error_perm
+import datetime
+
 try:
   ftp = FTP_TLS('192.168.43.254', user='client', passwd='')
   ftp = ftp.prot_p()
