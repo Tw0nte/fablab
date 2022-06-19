@@ -1,4 +1,4 @@
-# **<span style="text-decoration:underline;">Réalisation d'un compteur pour mesurer la fréquentation en bibliothèque</span>**
+# **<span style="text-decoration:underline;">Réalisation d'un compteur d'entrée/sorties afin de mesurer la fréquentation d'une bibliothèque</span>**
 
 ## **Le projet**
 Pour répondre à la demande du client sur le besoin de détecteurs pour les entrées et sorties de la médiathèque, nous avons choisi des capteurs infrarouges E18-D50NK avec un ESP8266. L'utilisation de capteur infrarouges permettait de détecter le passage sur une trentaines de centimètre. Son utilisation était adapté afin de comptabiliser les entrées et sorties depuis une porte ou un portique de sécurité. 
