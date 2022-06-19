@@ -1,9 +1,9 @@
 # **<span style="text-decoration:underline;">Réalisation d'un compteur pour mesurer la fréquentation en bibliothèque</span>**
 
-# **Le projet**
+## **Le projet**
 Pour répondre à la demande du client sur le besoin de détecteurs pour les entrées et sorties de la médiathèque, nous avons choisi des capteurs infrarouges E18-D50NK avec un ESP8266. L'utilisation de capteur infrarouges permet de détecter le passage sur une trentaines de centimètre, il est adapté pour comptabiliser les entrées depuis une porte ou un portique de sécurité. Les données sont envoyé sur un poste sur lequel un script python est chargé d’écouter sur un port les requète de l’ESP pour ensuite traiter les données
 
-# **Procédure**
+## **Procédure**
 Nous avons choisi d’utiliser Arduino pour coder sur l’ESP8266. Pour commencer à utiliser l’ESP8266, il faut flasher le contrôleur. Avant de le flasher il faut installer les drivers nécessaires sur son PC : [https://cityos-air.readme.io/docs/1-usb-drivers-for-nodemcu-v10](https://cityos-air.readme.io/docs/1-usb-drivers-for-nodemcu-v10)
 
 Bien vérifier que la version de son NodeMCU pour prendre le bon driver !
